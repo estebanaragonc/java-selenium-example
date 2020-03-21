@@ -98,5 +98,48 @@ public class TestMethods extends BaseTest{
         // Validate the result list is sorted by price
         Assert.assertTrue(cruiseSearch.isResultListSortedByPrice());
 	}
+	
+	@Test(description = "Validate itinerary page is loaded")
+	public void TC4_validateItineraryPageIsLoaded()
+	{
+		//page objects
+        Home home = new Home(getDriver());
+        CruiseSearch cruiseSearch = new CruiseSearch(getDriver());   
+        Itinerary itinerary = new Itinerary(getDriver()); 
+        //click close in modal opened
+        home.dismissModals();       
+        //click search cruises and use default filter, all cruises will be displayed
+        home.clickSearchCruises();
+        
+        cruiseSearch.seletFirstCruiseInResultList();
+        
+        // Validate the itinerary page was loaded contains all its sections
+        Assert.assertTrue(itinerary.isItineraryMenuDisplayed());
+        Assert.assertTrue(itinerary.isItineraryDaysSectionDisplayed());
+        Assert.assertTrue(itinerary.isItineraryActivitiesSectionDisplayed());
+        Assert.assertTrue(itinerary.isItineraryDiningSectionDisplayed());
+        Assert.assertTrue(itinerary.isItineraryStateRoomSectionDisplayed());
+        Assert.assertTrue(itinerary.isItineraryMoreDatesSectionDisplayed());       
+        
+        
+	}
+		
+	@Test(description = "Check the 'book now' button in itinerary page")
+	public void TC5_checkTheBookNowButtonInItineraryPage()
+	{
+		//page objects
+        Home home = new Home(getDriver());
+        CruiseSearch cruiseSearch = new CruiseSearch(getDriver());   
+        Itinerary itinerary = new Itinerary(getDriver()); 
+        //click close in modal opened
+        home.dismissModals();       
+        //click search cruises and use default filter, all cruises will be displayed
+        home.clickSearchCruises();
+        
+        cruiseSearch.seletFirstCruiseInResultList();
+        
+        // Validate the itinerary page was loaded using the book now button
+        Assert.assertTrue(itinerary.isBookNowPresentInPage());
+	}
 
 }
