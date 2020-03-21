@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -41,9 +40,12 @@ public class Home extends BasePage{
 	{
 		try {
 			System.out.println("Checking modal");
-			WebDriverWait wait = new WebDriverWait(driver, 40);
-			wait.until(ExpectedConditions.visibilityOf(outsideModal)).click();	
-			if (outsideModal.isDisplayed())
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//body[@id='MainBody']")));
+			
+			WebElement body = driver.findElement(By.xpath("//body[@id='MainBody']"));
+			
+			if (body.isDisplayed())
 			{
 				WebElement wb = driver.findElement(By.xpath("//div[@class='vifp-close']"));
 				JavascriptExecutor jse = (JavascriptExecutor)driver;
@@ -52,56 +54,70 @@ public class Home extends BasePage{
 			}
 
 		} catch (Exception e) {
-			System.out.println("**** Catch -> no close button detected...");
+			System.out.println("No close modal button detected...just continue, nothing happened");
 		}
 	}
 	
 	public void clickSailTo()
 	{
-		wait.until(ExpectedConditions.visibilityOf(sailTo)).click();		
+		clickElement(sailTo);
+		//wait.until(ExpectedConditions.visibilityOf(sailTo)).click();
+		//System.out.println();
 	}
 	
 	public void clickSailFrom()
 	{
-		wait.until(ExpectedConditions.visibilityOf(SailFrom)).click();		
+		clickElement(SailFrom);
+		//wait.until(ExpectedConditions.visibilityOf(SailFrom)).click();		
 	}
 	
 	public void clickDates()
 	{
-		wait.until(ExpectedConditions.visibilityOf(dates)).click();		
+		clickElement(dates);
+		//wait.until(ExpectedConditions.visibilityOf(dates)).click();		
 	}
 	
 	public void clickDuration()
 	{
-		wait.until(ExpectedConditions.visibilityOf(duration)).click();		
+		clickElement(duration);
+		//wait.until(ExpectedConditions.visibilityOf(duration)).click();		
 	}
 	
 	public void clickSearchCruises()
 	{
-		wait.until(ExpectedConditions.visibilityOf(searchCruises)).click();		
+		clickElement(searchCruises);
+		//wait.until(ExpectedConditions.visibilityOf(searchCruises)).click();		
 	}
 	
 	public void clickCloseModal()
 	{
-		wait.until(ExpectedConditions.visibilityOf(closeModal)).click();		
+		clickElement(closeModal);
+		//wait.until(ExpectedConditions.visibilityOf(closeModal)).click();		
 	}
 
 
 	public void selectSailOptionByText(String option) {
-		WebElement container = driver.findElement(By.xpath("//ul[@class='cdc-filter-cols-wrapper']"));
-		wait.until(ExpectedConditions.visibilityOf(container));
-		List<WebElement> options = container.findElements(By.tagName("li"));
+		System.out.println("Selection option by text [" + option + "]");		
+		try {
+			scrollUp();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		List<WebElement> options = driver.findElements(By.xpath("//ul[@class='cdc-filter-cols-wrapper']/li"));
+		System.out.println("Total options loaded: [" + options.size() + "]");
 		for (WebElement myOption : options)
 		{
-		    if (myOption.getText().equals(option))
+		    if (myOption.getText().contains(option))
 		    {
-		    	myOption.click(); // click the desired option
+		    	clickElement(myOption);
+		    	System.out.println("Option selected '" + option + "' [ok]");
 		        break;
 		    }
 		}		
 	}
 
 	public void selectSailFromOptionByText(String option) {
+		System.out.println("Selection option by text [" + option + "]");	
 		WebElement container = driver.findElement(By.xpath("//ul[@class='cdc-filter-cols-wrapper']"));
 		List<WebElement> options = container.findElements(By.tagName("li"));
 		for (WebElement myOption : options)
@@ -109,6 +125,7 @@ public class Home extends BasePage{
 		    if (myOption.getText().equals(option))
 		    {
 		    	myOption.click(); // click the desired option
+		    	System.out.println("Option selected '" + option + "' [ok]");
 		        break;
 		    }
 		}		
@@ -132,7 +149,7 @@ public class Home extends BasePage{
 	}
 
 	public void selectAvailableMonthsFromYear(String date) {
-		
+		System.out.println("Select available year   [" + date + "]");	
 		WebElement container = driver.findElement(By.xpath("//p[contains(text()," + date + ")]/parent::ul"));
 		List<WebElement> options = container.findElements(By.tagName("li"));
 		for (WebElement myOption : options)
@@ -142,9 +159,11 @@ public class Home extends BasePage{
 		    	myOption.click(); // click the desired option
 		    }
 		}				
+		System.out.println("All option months in year [" + date + "] were selected [ok]");
 	}
 
-	public void selectDurationByRange(String range) {		
+	public void selectDurationByRange(String range) {	
+		System.out.println("Selection range by text [" + range + "]");	
 		WebElement container = driver.findElement(By.xpath("//ul[@class='cdc-filter-cols-wrapper']"));
 		List<WebElement> options = container.findElements(By.tagName("li"));
 		for (WebElement myOption : options)
@@ -152,6 +171,7 @@ public class Home extends BasePage{
 		    if (myOption.getText().equals(range))
 		    {
 		    	myOption.click(); // click the desired option
+		    	System.out.println("Select range [" + range + "] [ok]");	
 		        break;
 		    }
 		}	

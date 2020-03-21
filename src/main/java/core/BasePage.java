@@ -48,11 +48,12 @@ public class BasePage {
     	System.out.println("Click [ok]");
     }
     
-    protected void scrollUp()
+    protected void scrollUp() throws InterruptedException
     {
     	System.out.println("Scrolling up...");
     	JavascriptExecutor jsx = (JavascriptExecutor)driver;
     	jsx.executeScript("window.scrollBy(0,-550)", "");
+    	Thread.sleep(2000);
     }
     
 }
