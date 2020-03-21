@@ -2,8 +2,6 @@ package pages;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,6 +23,7 @@ public class CruiseSearch extends BasePage{
 	@FindBy(linkText= "learn More") private WebElement learnMoreLink;	
 	@FindBy(xpath="//a[@data-tealium='vrgf-learn-more']") private List<WebElement> firstCruiseResult;
 	@FindBy(xpath="//span[@class='urgBarClose']") private WebElement closeAlert;
+	@FindBy(xpath="//div[@class=\"sfp-reset\"]/a") private WebElement resetPriceLink;
 	
 	
 	public CruiseSearch(WebDriver driver) {
@@ -68,17 +67,19 @@ public class CruiseSearch extends BasePage{
 
 	public void adjustMaximumPricePerPersonTo(int lastCardAmount) {
 		wait.until(ExpectedConditions.visibilityOf(pricingSlider));
-		WebElement slider = driver.findElement(By.xpath("//*[@ng-style='maxPointerStyle']"));		
 		Actions action= new Actions(driver);
 		if (lastCardAmount > 500)
 		{
 			System.out.println("Amount of last card > 500");
-			action.dragAndDropBy(slider, -500, 0).build().perform();;
+			action.clickAndHold(pricingSlider); //(slider.build().perform();
+			action.dragAndDropBy(pricingSlider, -500, 0).build().perform();;
+			System.out.println("Slider moved");
 		}
 		else
 		{
 			System.out.println("Amount of last card v 500");
-			action.dragAndDropBy(slider, -800, 0).build().perform();;
+			action.dragAndDropBy(pricingSlider, -800, 0).build().perform();;
+			System.out.println("Slider moved");
 		}	    
 
 		//Implicit wait just to wait a little bit while page loads / can be deleted
@@ -88,6 +89,7 @@ public class CruiseSearch extends BasePage{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		wait.until(ExpectedConditions.visibilityOf(resetPriceLink));
 	}
 
 	public boolean isResultListSortedByPrice() {
@@ -120,6 +122,7 @@ public class CruiseSearch extends BasePage{
 		        previous = current;
 		    }			
 		}
+		System.out.println("isResultListSortedByPrice() - > " + status);
 		return status;
 	}
 	

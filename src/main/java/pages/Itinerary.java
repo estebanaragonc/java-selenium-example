@@ -1,12 +1,10 @@
 package pages;
 
-import java.nio.channels.DatagramChannel;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -138,10 +136,14 @@ public class Itinerary extends BasePage{
 				WebElement readMore = driver.findElement(By.xpath("//*[@id='details']/div[3]/div[" + dayCardPosition + "]/div[1]/div/div/button"));
 				clickElement(readMore);
 			}
-			scrollUp();
+			try {
+				scrollUp();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
      		//get the text of the cruise when day is opened
-			wait.until(ExpectedConditions.visibilityOf(titleCardExpanded));
-			//WebElement titleCardOpened = driver.findElement(By.xpath("//div[@class='slide-heading-wrapper']/h3"));   		
+			wait.until(ExpectedConditions.visibilityOf(titleCardExpanded));   		
 			String textTitleCardOpened = titleCardExpanded.getText();	
 			// comparte if title obtained when card is opened is the same obtained in the card information
 			System.out.println("Comparing [" + title + "] with [" + textTitleCardOpened + "]" );
@@ -154,20 +156,8 @@ public class Itinerary extends BasePage{
 				status = false;
 				break;
 			}
-			// close the day opened
-			scrollUp();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			wait.until(ExpectedConditions.elementToBeClickable(btnCloseDayOpened));
-			btnCloseDayOpened.click();
-			System.out.println("Close X was clicked");
-			//wait until day opened card is completely closed
-			WebElement element_closed = driver.findElement(By.xpath("//div[@class='slide-heading']"));
-			wait.until(ExpectedConditions.invisibilityOf(element_closed));
+			WebElement opened = driver.findElement(By.xpath("//div[@class='slide-heading']"));
+			wait.until(ExpectedConditions.visibilityOf(opened));
 			dayCardPosition = dayCardPosition + 1;
 			iteration = iteration + 1;
 		}

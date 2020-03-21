@@ -141,5 +141,35 @@ public class TestMethods extends BaseTest{
         // Validate the itinerary page was loaded using the book now button
         Assert.assertTrue(itinerary.isBookNowPresentInPage());
 	}
+	
+	@Test(description = "User able to read about all days in itinerary")
+	public void TC6_userAbleToReadAboutAllDaysInItinerary()
+	{
+		//page objects
+        Home home = new Home(getDriver());
+        CruiseSearch cruiseSearch = new CruiseSearch(getDriver());  
+        Itinerary itinerary = new Itinerary(getDriver()); 
+        //click close in modal opened
+        home.dismissModals();
+        //set the filters in home page
+        home.clickSailTo();     
+        home.selectSailOptionByText("The Bahamas");
+        home.clickSailFrom();
+        //home.selectRandomEnabledSailFromOption();
+        home.selectSailFromOptionByText("Charleston, SC");
+        home.selectSailFromOptionByText("Baltimore, MD");
+        home.clickDates();
+        home.selectAvailableMonthsFromYear("2021");
+        home.clickDuration();
+        home.selectDurationByRange("6 - 9 Days");
+        //click search cruises
+        home.clickSearchCruises();
+        //click in the 'learn more' of the first cruise card
+        cruiseSearch.seletFirstCruiseInResultList();
+        //dismiss alerts presented
+        //cruiseSearch.dismissAlert();
+        //validate 'learn more' link in each day present can be clicked
+        Assert.assertTrue(itinerary.expandAllDaysSection());;              
+	}
 
 }
